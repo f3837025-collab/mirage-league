@@ -44,7 +44,6 @@
         ::-webkit-scrollbar-track { background: #040209; }
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--v2), var(--v3)); border-radius: 3px; }
 
-        /* === AURORA BACKGROUND === */
         .bg-effects {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background:
@@ -75,8 +74,6 @@
             0%,100% { transform: translate(0,0) scale(1); }
             50% { transform: translate(-5%,-5%) scale(1.1); }
         }
-
-        /* Iridescent shimmer scanlines */
         .heat-shimmer {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image: repeating-linear-gradient(0deg,
@@ -86,14 +83,15 @@
             opacity: 0.6;
         }
         @keyframes shimmer { 0% { transform: translateY(0); } 100% { transform: translateY(12px); } }
+        @keyframes iridescent { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.5); } }
 
-        /* === NAVIGATION === */
+        /* === NAV === */
         .nav-sidebar {
             position: fixed; top: 0; left: 0; width: var(--nav-width); height: 100vh;
-            background: rgba(4,2,9,0.96);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid var(--border);
-            z-index: 1000; display: flex; flex-direction: column; overflow: hidden;
+            background: rgba(4,2,9,0.96); backdrop-filter: blur(30px);
+            border-right: 1px solid var(--border); z-index: 1000;
+            display: flex; flex-direction: column; overflow: hidden;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .nav-sidebar::before {
@@ -105,8 +103,7 @@
         .nav-logo-icon {
             width: 42px; height: 42px;
             background: linear-gradient(135deg, var(--v1), var(--v3));
-            background-size: 200% 200%;
-            animation: iridescent 5s ease infinite;
+            background-size: 200% 200%; animation: iridescent 5s ease infinite;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 16px; font-weight: 900; color: #fff;
@@ -119,16 +116,10 @@
             animation: logoShine 4s ease-in-out infinite;
         }
         @keyframes logoShine { 0%,100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
-        @keyframes iridescent {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
         .nav-logo-text {
             font-size: 14px; font-weight: 800; letter-spacing: 1.5px;
             background: linear-gradient(90deg, #fff, var(--lav), var(--v3), #fff);
-            background-size: 250% 100%;
-            animation: iridescent 6s linear infinite;
+            background-size: 250% 100%; animation: iridescent 6s linear infinite;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .nav-logo-sub { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
@@ -175,6 +166,194 @@
         }
         .nav-toggle span { width: 18px; height: 2px; background: var(--lav); border-radius: 2px; transition: all 0.3s ease; }
 
+        /* === ADMIN ZONE (top-right) === */
+        .admin-zone { position: fixed; top: 18px; right: 24px; z-index: 1500; }
+        #adminBtn {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 18px;
+            background: rgba(4,2,9,0.92); backdrop-filter: blur(20px);
+            border: 1px solid var(--border-accent); border-radius: 100px;
+            color: var(--lav); font-family: 'Inter', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            cursor: pointer; transition: all 0.25s ease;
+        }
+        #adminBtn:hover { border-color: rgba(196,181,253,0.5); box-shadow: 0 0 20px rgba(168,85,247,0.25); transform: translateY(-1px); }
+        #adminBtn .adm-avatar {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--v2), var(--v3));
+            color: #fff; font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .admin-menu {
+            position: absolute; top: 52px; right: 0; min-width: 230px;
+            background: #0d0818; border: 1px solid var(--border-accent);
+            border-radius: 14px; padding: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            display: none;
+        }
+        .admin-menu.show { display: block; }
+        .admin-menu-head { padding: 8px 10px 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+        .admin-menu-nick { font-size: 14px; font-weight: 700; color: var(--text); }
+        .rank-badge {
+            display: inline-block; margin-top: 4px;
+            padding: 2px 10px; border-radius: 6px;
+            font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .rank-staff { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #000; }
+        .rank-head { background: linear-gradient(90deg, var(--v1), var(--v3)); color: #fff; }
+        .rank-maker { background: rgba(34,211,238,0.15); color: #a5f3fc; border: 1px solid rgba(34,211,238,0.3); }
+        .admin-menu button {
+            display: block; width: 100%; text-align: left;
+            padding: 10px 12px; margin-bottom: 4px;
+            background: transparent; border: none; border-radius: 8px;
+            color: var(--text-dim); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .admin-menu button:hover { background: rgba(168,85,247,0.1); color: var(--text); }
+        .admin-menu button.danger:hover { background: rgba(251,113,133,0.1); color: #fda4af; }
+
+        /* === MODALS === */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            width: min(460px, 94vw);
+            background: #0d0818; border: 1px solid var(--border-accent);
+            border-radius: 18px; padding: 30px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.8), 0 0 60px rgba(168,85,247,0.1);
+            position: relative;
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .modal h3 {
+            font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;
+            background: linear-gradient(90deg, var(--lav), var(--v3));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .modal .modal-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; }
+        .modal-close {
+            position: absolute; top: 14px; right: 14px;
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 16px; cursor: pointer; transition: all 0.2s;
+        }
+        .modal-close:hover { color: var(--red); border-color: rgba(251,113,133,0.3); }
+        .field { margin-bottom: 16px; }
+        .field label {
+            display: block; font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); margin-bottom: 6px;
+        }
+        .field input, .field textarea {
+            width: 100%; padding: 12px 14px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.88rem;
+            outline: none; transition: border-color 0.2s;
+            resize: vertical;
+        }
+        .field input:focus, .field textarea:focus { border-color: rgba(168,85,247,0.5); box-shadow: 0 0 15px rgba(168,85,247,0.15); }
+        .btn-primary {
+            width: 100%; padding: 13px;
+            background: linear-gradient(90deg, var(--v1), var(--v3));
+            background-size: 200% 100%; animation: iridescent 4s ease infinite;
+            border: none; border-radius: 10px;
+            color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 0.9rem; font-weight: 800; letter-spacing: 1px;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(168,85,247,0.4); }
+
+        /* === ADD RULE BUTTON in sections === */
+        .add-rule-btn {
+            margin-left: 12px; padding: 6px 14px;
+            background: rgba(34,211,238,0.08);
+            border: 1px solid rgba(34,211,238,0.35);
+            border-radius: 8px;
+            color: #a5f3fc; font-family: 'Inter', sans-serif;
+            font-size: 11px; font-weight: 800; letter-spacing: 1px;
+            cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .add-rule-btn:hover { background: rgba(34,211,238,0.15); box-shadow: 0 0 15px rgba(34,211,238,0.25); transform: translateY(-1px); }
+
+        /* === UPD BADGE (only latest update) === */
+        .rules-list > li.upd { border-color: rgba(34,211,238,0.35); background: rgba(34,211,238,0.04); }
+        .rules-list > li.upd::after,
+        .custom-rules > li.upd::after {
+            content: 'UPD'; position: absolute; top: 8px; right: 12px;
+            font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #000;
+            background: linear-gradient(90deg, #22d3ee, #a5f3fc);
+            padding: 2px 8px; border-radius: 4px;
+            box-shadow: 0 0 12px rgba(34,211,238,0.5);
+        }
+        .style-card.upd-card { border-color: rgba(34,211,238,0.35); }
+        .style-card.upd-card .style-card-name::after {
+            content: 'UPD'; font-size: 9px; color: #000;
+            background: linear-gradient(90deg, #22d3ee, #a5f3fc);
+            padding: 2px 8px; border-radius: 4px; margin-left: 12px; letter-spacing: 1px;
+            font-family: 'Inter', sans-serif; font-weight: 800;
+        }
+        .style-card ul li.upd { border-left-color: var(--cyan); background: rgba(34,211,238,0.05); position: relative; }
+        .style-card ul li.upd::after {
+            content: 'UPD'; font-size: 9px; color: #000;
+            background: linear-gradient(90deg, #22d3ee, #a5f3fc);
+            padding: 1px 6px; border-radius: 3px; margin-left: 8px; letter-spacing: 1px; font-weight: 800;
+        }
+        .chip.upd-chip { position: relative; box-shadow: 0 0 14px rgba(34,211,238,0.25); }
+        .chip.upd-chip::after {
+            content: 'UPD'; position: absolute; top: -8px; right: -8px;
+            font-size: 7px; font-weight: 800; color: #000;
+            background: linear-gradient(90deg, #22d3ee, #a5f3fc);
+            padding: 1px 5px; border-radius: 4px; letter-spacing: 0.5px;
+        }
+
+        /* === AUTHOR BADGE === */
+        .author {
+            display: inline-flex; width: 18px; height: 18px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--v2), var(--v3));
+            color: #fff; font-size: 10px; font-weight: 800;
+            align-items: center; justify-content: center;
+            margin-left: 8px; position: relative; cursor: default; flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .author::after {
+            content: attr(data-nick);
+            position: absolute; bottom: 140%; left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1a1030; border: 1px solid var(--border-accent);
+            color: var(--lav); padding: 3px 10px; border-radius: 6px;
+            font-size: 10px; font-weight: 600; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: 0.2s; z-index: 60;
+        }
+        .author:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
+
+        .del-btn {
+            margin-left: 8px; width: 20px; height: 20px; border-radius: 6px;
+            background: rgba(251,113,133,0.1); border: 1px solid rgba(251,113,133,0.25);
+            color: var(--red); font-size: 11px; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+            vertical-align: middle; transition: all 0.2s;
+        }
+        .del-btn:hover { background: rgba(251,113,133,0.25); }
+
+        .custom-rules { margin-top: 14px; }
+
+        /* === TOAST === */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #0d0818; border: 1px solid var(--border-accent);
+            border-radius: 12px; padding: 12px 24px;
+            color: var(--lav); font-size: 0.85rem; font-weight: 600;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 30px rgba(168,85,247,0.15);
+            opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 3000;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
         /* === MAIN === */
         .main-content {
             margin-left: var(--nav-width);
@@ -183,19 +362,16 @@
             max-width: calc(var(--nav-width) + 920px);
         }
 
-        /* === HERO === */
         .hero {
             text-align: center; padding: 90px 40px; margin-bottom: 60px;
             position: relative; border-radius: 28px; overflow: hidden;
-            background: rgba(6,3,14,0.96);
-            border: 1px solid var(--border);
+            background: rgba(6,3,14,0.96); border: 1px solid var(--border);
         }
         .hero::before {
             content: ''; position: absolute; inset: -2px;
             background: conic-gradient(from 0deg, var(--v1), var(--v3), var(--v4), var(--v2), var(--v1));
             border-radius: 29px; z-index: -2;
-            animation: borderRotate 8s linear infinite;
-            opacity: 0.55;
+            animation: borderRotate 8s linear infinite; opacity: 0.55;
         }
         .hero::after {
             content: ''; position: absolute; inset: 1px;
@@ -203,7 +379,6 @@
             border-radius: 27px; z-index: -1;
         }
         @keyframes borderRotate { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-
         .hero-mirage {
             position: absolute; inset: 0; z-index: -1; opacity: 0.25;
             background: repeating-linear-gradient(0deg,
@@ -212,37 +387,28 @@
             animation: mirageWave 8s ease-in-out infinite;
         }
         @keyframes mirageWave { 0%,100% { transform: skewY(-0.5deg); } 50% { transform: skewY(0.5deg); } }
-
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 8px 20px;
             background: linear-gradient(90deg, rgba(124,58,237,0.15), rgba(217,70,239,0.1), rgba(124,58,237,0.15));
-            background-size: 200% 100%;
-            animation: iridescent 5s ease infinite;
-            border: 1px solid rgba(196,181,253,0.25);
-            border-radius: 100px;
+            background-size: 200% 100%; animation: iridescent 5s ease infinite;
+            border: 1px solid rgba(196,181,253,0.25); border-radius: 100px;
             font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
             color: var(--lav); margin-bottom: 24px;
         }
         .hero-badge::before {
             content: ''; width: 6px; height: 6px; background: var(--v2); border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 12px var(--v2);
+            animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 12px var(--v2);
         }
-        @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.5); } }
-
         .hero h1 {
             font-size: clamp(2.5rem, 6vw, 4.2rem);
             font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin-bottom: 16px;
             background: linear-gradient(90deg, #ffffff, var(--lav), var(--v2), var(--v3), var(--v4), #ffffff);
-            background-size: 300% 100%;
-            animation: iridescent 7s linear infinite;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background-size: 300% 100%; animation: iridescent 7s linear infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .hero p { font-size: 1.15rem; color: var(--text-dim); font-weight: 300; max-width: 500px; margin: 0 auto; }
 
-        /* === SECTIONS === */
         .section {
             margin-bottom: 40px; border-radius: var(--radius);
             background: var(--bg-card); border: 1px solid var(--border);
@@ -280,7 +446,6 @@
         }
         .section-body { padding: 32px 36px; }
 
-        /* === RULES LIST === */
         .rules-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .rules-list > li {
             position: relative; padding: 16px 20px 16px 24px;
@@ -301,16 +466,7 @@
             color: var(--text); transform: translateX(4px);
         }
         .rules-list > li:hover::before { height: 60%; }
-        .rules-list > li.new-rule { border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.05); }
-        .rules-list > li.new-rule::after {
-            content: 'NEW'; position: absolute; top: 8px; right: 12px;
-            font-size: 9px; font-weight: 800; letter-spacing: 1px; color: #fff;
-            background: linear-gradient(90deg, var(--v1), var(--v3));
-            padding: 2px 8px; border-radius: 4px;
-            box-shadow: 0 0 12px rgba(168,85,247,0.4);
-        }
 
-        /* === SUBSECTION === */
         .subsection { margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--border); }
         .subsection:first-child { margin-top: 0; padding-top: 0; border-top: none; }
         .subsection-title {
@@ -324,7 +480,6 @@
             box-shadow: 0 0 12px rgba(168,85,247,0.4);
         }
 
-        /* === TABLES === */
         .table-wrap { overflow-x: auto; margin: 18px 0; border-radius: var(--radius-sm); border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         thead { background: linear-gradient(90deg, rgba(124,58,237,0.14), rgba(217,70,239,0.06)); }
@@ -338,13 +493,11 @@
         tbody tr:hover { background: rgba(168,85,247,0.04); }
         tbody tr:last-child td { border-bottom: none; }
 
-        /* === TAGS === */
         .tag { display: inline-block; padding: 3px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
         .tag-red { background: rgba(251,113,133,0.12); color: #fda4af; border: 1px solid rgba(251,113,133,0.25); }
         .tag-blue { background: rgba(34,211,238,0.1); color: #a5f3fc; border: 1px solid rgba(34,211,238,0.2); }
         .tag-yellow { background: rgba(168,85,247,0.15); color: var(--lav); border: 1px solid rgba(168,85,247,0.3); }
 
-        /* === COMBO === */
         .combo-list { display: flex; flex-direction: column; gap: 8px; }
         .combo-item {
             display: flex; align-items: center; gap: 14px; padding: 13px 18px;
@@ -360,7 +513,6 @@
             font-weight: 800; font-size: 12px; flex-shrink: 0;
         }
 
-        /* === CHIPS === */
         .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
         .chip {
             padding: 7px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
@@ -372,25 +524,17 @@
         .chip-banned:hover { border-color: rgba(251,113,133,0.35); background: rgba(251,113,133,0.1); }
         .chip-violet {
             background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(217,70,239,0.1), rgba(124,58,237,0.12));
-            background-size: 200% 100%;
-            animation: iridescent 6s ease infinite;
+            background-size: 200% 100%; animation: iridescent 6s ease infinite;
             border-color: rgba(168,85,247,0.3); color: var(--lav);
         }
         .chip-violet:hover { border-color: rgba(196,181,253,0.5); box-shadow: 0 0 20px rgba(168,85,247,0.2); }
 
-        /* === FLOW === */
         .flow-list { display: flex; flex-direction: column; gap: 10px; }
         .flow-item {
             padding: 18px 22px; background: var(--bg-inset); border: 1px solid var(--border);
             border-radius: var(--radius-sm); transition: all 0.25s ease;
         }
         .flow-item:hover { border-color: rgba(168,85,247,0.25); background: rgba(168,85,247,0.04); }
-        .flow-item.new-rule { border-color: rgba(168,85,247,0.35); background: rgba(168,85,247,0.05); }
-        .flow-item.new-rule .flow-name::after {
-            content: ' NEW'; font-size: 9px; color: #fff;
-            background: linear-gradient(90deg, var(--v1), var(--v3));
-            padding: 1px 6px; border-radius: 3px; margin-left: 8px; letter-spacing: 1px;
-        }
         .flow-name {
             font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600;
             margin-bottom: 6px;
@@ -399,7 +543,6 @@
         }
         .flow-rule { font-size: 0.85rem; color: var(--text-dim); }
 
-        /* === NOTES === */
         .note { padding: 18px 22px; border-radius: var(--radius-sm); font-size: 0.88rem; margin: 18px 0; line-height: 1.6; position: relative; overflow: hidden; }
         .note::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
         .note-warn { background: rgba(168,85,247,0.07); border: 1px solid rgba(168,85,247,0.2); color: var(--lav); }
@@ -407,7 +550,6 @@
         .note-danger { background: rgba(251,113,133,0.05); border: 1px solid rgba(251,113,133,0.15); color: #fda4af; }
         .note-danger::before { background: var(--red); }
 
-        /* === STYLE CARDS === */
         .style-card {
             margin-bottom: 20px; padding: 26px;
             background: var(--bg-inset); border: 1px solid var(--border);
@@ -420,13 +562,6 @@
         }
         .style-card:hover { border-color: rgba(168,85,247,0.25); box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
         .style-card:hover::before { opacity: 1; }
-        .style-card.updated { border-color: rgba(168,85,247,0.3); }
-        .style-card.updated .style-card-name::after {
-            content: 'UPDATED'; font-size: 9px; color: #fff;
-            background: linear-gradient(90deg, var(--v1), var(--v3));
-            padding: 2px 8px; border-radius: 4px; margin-left: 12px; letter-spacing: 1px;
-            font-family: 'Inter', sans-serif;
-        }
         .style-card-name {
             font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--text);
             margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
@@ -446,14 +581,27 @@
             transition: all 0.2s ease; line-height: 1.5;
         }
         .style-card ul li:hover { border-left-color: var(--v2); background: rgba(168,85,247,0.05); color: var(--text); }
-        .style-card ul li.new-item { border-left-color: var(--v3); background: rgba(168,85,247,0.06); }
-        .style-card ul li.new-item::after {
-            content: ' NEW'; font-size: 9px; color: #fff;
-            background: linear-gradient(90deg, var(--v1), var(--v3));
-            padding: 1px 6px; border-radius: 3px; margin-left: 8px; letter-spacing: 1px;
+
+        .style-variant { margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(168,85,247,0.15); }
+        .style-variant:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+        .style-variant-title {
+            font-size: 0.9rem; font-weight: 700; color: var(--lav);
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .style-variant-title::before { content: '◆'; color: var(--v3); font-size: 0.7rem; }
+        .moveset-block {
+            margin: 10px 0; padding: 12px 14px;
+            background: rgba(124,58,237,0.05);
+            border: 1px solid rgba(168,85,247,0.15);
+            border-radius: 10px;
+        }
+        .moveset-label {
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--v3); margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        /* === FOOTER === */
         .footer { text-align: center; padding: 50px 20px; margin-top: 60px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.82rem; position: relative; }
         .footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent); }
         .footer strong {
@@ -479,10 +627,11 @@
             .nav-sidebar.open { transform: translateX(0); }
             .nav-toggle { display: flex; }
             .main-content { margin-left: 0; padding: 30px 20px 80px; padding-top: 80px; }
+            .admin-zone { top: 20px; right: 76px; }
         }
         @media (max-width: 640px) {
             .section-body { padding: 22px 20px; }
-            .section-header { padding: 22px 20px; }
+            .section-header { padding: 22px 20px; flex-wrap: wrap; }
             .hero { padding: 50px 24px; }
         }
         .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; backdrop-filter: blur(4px); }
@@ -495,6 +644,75 @@
 
     <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- ADMIN ZONE -->
+    <div class="admin-zone">
+        <button id="adminBtn">🔐 ВХОД</button>
+        <div class="admin-menu" id="adminMenu">
+            <div class="admin-menu-head">
+                <div class="admin-menu-nick" id="menuNick">—</div>
+                <span class="rank-badge" id="menuRank">—</span>
+            </div>
+            <button id="menuKeys" style="display:none;">🔑 Смена ключей</button>
+            <button id="menuLogout" class="danger">⎋ Выйти</button>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" data-close="authModal">✕</button>
+            <h3>Регистрация админа</h3>
+            <div class="modal-sub">Введите ник и ключ доступа вашего ранга</div>
+            <div class="field">
+                <label>Ник</label>
+                <input type="text" id="authNick" placeholder="Ваш ник" maxlength="24">
+            </div>
+            <div class="field">
+                <label>Ключ доступа</label>
+                <input type="password" id="authKey" placeholder="Ключ">
+            </div>
+            <button class="btn-primary" id="authSubmit">ВОЙТИ</button>
+        </div>
+    </div>
+
+    <!-- ADD RULE MODAL -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <button class="modal-close" data-close="addModal">✕</button>
+            <h3>Новое правило</h3>
+            <div class="modal-sub" id="addModalSub">Раздел: —</div>
+            <div class="field">
+                <label>Текст правила</label>
+                <textarea id="addText" rows="4" placeholder="Формулировка нового правила..."></textarea>
+            </div>
+            <button class="btn-primary" id="addSubmit">ДОБАВИТЬ</button>
+        </div>
+    </div>
+
+    <!-- KEYS MODAL -->
+    <div class="modal-overlay" id="keysModal">
+        <div class="modal">
+            <button class="modal-close" data-close="keysModal">✕</button>
+            <h3>Смена ключей</h3>
+            <div class="modal-sub">Доступно только для Выш состава</div>
+            <div class="field">
+                <label>Выш состав</label>
+                <input type="text" id="keyStaff">
+            </div>
+            <div class="field">
+                <label>Headrulemaker</label>
+                <input type="text" id="keyHead">
+            </div>
+            <div class="field">
+                <label>Rulemaker</label>
+                <input type="text" id="keyMaker">
+            </div>
+            <button class="btn-primary" id="keysSubmit">СОХРАНИТЬ КЛЮЧИ</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
 
     <nav class="nav-sidebar" id="navSidebar">
         <div class="nav-header">
@@ -565,7 +783,7 @@
                     <li>После двух таймов команда, игравшая не на своём сервере, имеет право запросить свап приватного сервера.</li>
                     <li>Если правила добавили во время игры — доигрываете матч, не опираясь на добавленные правила.</li>
                     <li>Если команда без места в топе или T15–T11 против Т3+ проигрывает 5-0 в первом тайме — автоматически проигрывает 3-0 (по желанию победителей можно продолжить).</li>
-                    <li class="new-rule">Запрещено брать тайм-аут после 1-го тайма. Исключение: если игроку нужно срочно покинуть матч и ожидается новый игрок, либо другие технические проблемы.</li>
+                    <li>Запрещено брать тайм-аут после 1-го тайма. Исключение: если игроку нужно срочно покинуть матч и ожидается новый игрок, либо другие технические проблемы.</li>
                 </ul>
 
                 <div class="subsection">
@@ -594,6 +812,16 @@
                     <div class="subsection-title">Позиции для скримов</div>
                     <ul class="rules-list">
                         <li>Defensive Winger может находиться на позиции нижнего вингера.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">RuleBreak и Turnover Protocol</div>
+                    <ul class="rules-list">
+                        <li>При объявлении <strong>RuleBreak (Turn или Free Goal)</strong> все игроки обязаны оставаться на своих местах.</li>
+                        <li>Дополнительное правило при выдаче <strong>TURNOVER</strong>:<br>
+                            · Запрещено сразу после выдачи турновера подходить к человеку в упор.<br>
+                            · После турновера должно пройти около <strong>1–2 секунд</strong> свободного движения, прежде чем начинать активные действия.</li>
                     </ul>
                 </div>
             </div>
@@ -689,8 +917,8 @@
                         <li>Забирать мяч в M2 Баг.</li>
                         <li>Movestack в виде любого шота.</li>
                         <li>Во время лага при Awakening — запрещено отбирать и забивать.</li>
-                        <li class="new-rule">Разрешено 2 PP-стиля в поле при условии, что один из них не даёт PP — ибо Turnover. Пример: [ Charles ] + [ Sae ] — Charles даёт PP, Sae нет / Sae даёт PP — Turnover. Точно так же работает со всеми стилями.</li>
-                        <li class="new-rule">Запрещено использовать PP на Goalkeeper.</li>
+                        <li>Разрешено 2 ПП-стиля в поле при условии, что один из них не даёт ПП — ибо Free Goal. Пример: [ Charles ] + [ Sae ] — Charles даёт ПП, Sae нет / Sae даёт ПП — Free Goal. Точно так же работает со всеми стилями.</li>
+                        <li>Запрещено использовать ПП на Goalkeeper.</li>
                         <li>Стили/потоки, не полученные обычным способом или на ивентах. Любое вмешательство админ-правами — строго запрещено.</li>
                         <li>Скины на мяч. Гол со скином на мяч — Free Goal + Turn в Kick-Off.</li>
                         <li>Не успели использовать способности с лимитом в основное время — количество остаётся в овертайме.</li>
@@ -733,7 +961,8 @@
                     <ul class="rules-list">
                         <li>[ NEL Isagi ] и [ Don Lorenzo ] не считаются за World Class. В 1 команде — 1 World Class.</li>
                         <li>[ Phantom Isagi ] не считается за World Class. С [ Don Lorenzo ] — 1 World Class.</li>
-                        <li class="new-rule">[ Don Lorenzo ] считается за World Class. Не сочетается с [ Aiku ]. На DW допускается.</li>
+                        <li>[ Don Lorenzo ] считается за World Class. Не сочетается с [ Aiku ]. На DW допускается.</li>
+                        <li class="upd">[ Snuffy ] считается за World Class.</li>
                     </ul>
                 </div>
 
@@ -790,6 +1019,7 @@
                         <span class="chip chip-violet">[ Elf Emperor ]</span>
                         <span class="chip chip-violet">[ Santa Lavinho ]</span>
                         <span class="chip chip-violet">[ Don Lorenzo ]</span>
+                        <span class="chip chip-violet upd-chip">[ Snuffy ]</span>
                     </div>
                 </div>
 
@@ -804,6 +1034,7 @@
                         <span class="chip chip-banned">[ Aiku ]</span>
                         <span class="chip chip-banned">[ Rin ]</span>
                         <span class="chip chip-banned">[ Don Lorenzo ]</span>
+                        <span class="chip chip-banned upd-chip">[ Snuffy ]</span>
                         <span class="chip chip-banned">все World Class стили</span>
                     </div>
                 </div>
@@ -838,14 +1069,13 @@
                     <div class="flow-item"><div class="flow-name">[ Awakened Genius ] + [ Magician Flow ]</div><div class="flow-rule">Запрещено.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Awakened Genius ] + [ Contrarian ]</div><div class="flow-rule">Запрещено.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Awakened Genius ]</div><div class="flow-rule">Запрещён пас на того, кто в вражеском боксе. Запрещён M2 пас на тиммейта не с вашей половины поля.</div></div>
-                    <div class="flow-item new-rule"><div class="flow-name">[ Awakened Genius ] → PP на [ Demon King ]</div><div class="flow-rule">Запрещено потоком Awakened Genius давать PP на Demon King, если он находится в потоке.</div></div>
+                    <div class="flow-item"><div class="flow-name">[ Awakened Genius ] → ПП на [ Demon King ]</div><div class="flow-rule">Запрещено потоком Awakened Genius давать ПП на Demon King, если он находится в потоке.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Magician Flow ]</div><div class="flow-rule">1 на команду. Запрещён пас на того, кто в вражеском боксе. Запрещён со стилями с пасом. Запрещён M2 пас на тиммейта не с вашей половины.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Contrarian ]</div><div class="flow-rule">2 на команду. Запрещён M2 пас на тиммейта не с вашей половины.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Magician Flow ] + [ Contrarian ]</div><div class="flow-rule">Запрещено.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Demon King ]</div><div class="flow-rule">Только один среди Central Forward / Offensive Winger / Defensive Winger (Goalkeeper и CM — без ограничений).</div></div>
                     <div class="flow-item"><div class="flow-name">[ Target men ]</div><div class="flow-rule">Только один среди CF/OW/DW (GK и CM — без ограничений). Запрещён Volley во вражеском боксе.</div></div>
-                    <div class="flow-item"><div class="flow-name">[ Demon King ] + [ Target men ]</div><div class="flow-rule">Запрещено в нападении.</div></div>
-                    <div class="flow-item new-rule"><div class="flow-name">[ Demon King ] + [ Target men ] / [ Demon King ] + [ Demon King ] / [ Target men ] + [ Target men ]</div><div class="flow-rule">Запрещено использовать, если эти потоки используют 2 атакующих (CF + OW). Если DW выходит в атаку и забивает одним из потоков в этих связках, то он считается как OW — это Free Goal. Бить можно на DW только без потока (если M1) либо с ударных способностей по типу Power Shot.</div></div>
+                    <div class="flow-item"><div class="flow-name">[ Demon King ] + [ Target men ]</div><div class="flow-rule">Связка <strong>ЗАПРЕЩЕНА</strong> на DW / OW / CF. Разрешена <strong>ТОЛЬКО</strong> на: CM или GK.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Destructive Impulse ]</div><div class="flow-rule">Только 1 в атаке и 1 в защите одновременно. Запрещено бить в боксе, запрещено с ударными способностями.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Singularity ]</div><div class="flow-rule">1 на команду.</div></div>
                     <div class="flow-item"><div class="flow-name">[ Butterfly Dancer ]</div><div class="flow-rule">1 на команду.</div></div>
@@ -859,7 +1089,7 @@
             <div class="section-header"><div class="section-icon">🛡</div><div class="section-title">Отборы (Major / Minor)</div><div class="section-number">10</div></div>
             <div class="section-body">
                 <div class="note note-danger">
-                    Запрещено в одной команде для отбора: [ Nagi ] — Defensive Trap (C), [ NEL Nagi ] — Defensive Skull Trap (C), [ Skeleton Nagi ] — Defensive Skeleton Trap (C), [ NEL Reo ] — Chameleon Defense (V), другие скопированные из списка, [ Subzero Loki ] — Godspeed Freeze (V). Разрешено 2 стиля с Major отборами и 1 стиль с Minor отбором в одной команде. Больше — запрещено.
+                    Запрещено в одной команде для отбора: [ Nagi ] — Defensive Trap (C), [ NEL Nagi ] — Defensive Skull Trap (C), [ Skeleton Nagi ] — Defensive Skeleton Trap (C), [ NEL Reo ] — Chameleon Defense (B), другие скопированные из списка, [ Subzero Loki ] — Godspeed Freeze (V). Разрешено 2 стиля с Major отборами и 1 стиль с Minor отбором в одной команде. Больше — запрещено.
                 </div>
 
                 <div class="subsection">
@@ -937,11 +1167,58 @@
 
                 <div class="style-card"><div class="style-card-name">[ Kurona ]</div><ul><li>OneTwo (C) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li>Shark Steal (V) — только 4 раза за тайм + 1 в овертайме.</li></ul></div>
 
-                <div class="style-card updated"><div class="style-card-name">[ Otoya ]</div><ul><li>Dynamo (C) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li class="new-item">Shuriken Volley — запрещён.</li></ul></div>
+                <div class="style-card"><div class="style-card-name">[ Otoya ]</div><ul><li>Dynamo (C) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li>Shuriken Volley — запрещён.</li></ul></div>
 
                 <div class="style-card"><div class="style-card-name">[ Raichi ]</div><ul><li>Victory Pass (C) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li>Matchup Victory (C AWK) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li></ul></div>
 
-                <div class="style-card"><div class="style-card-name">[ Karasu ]</div><ul><li>Пасы в способностях — запрещено во вражеском боксе / во вражеский бокс.</li></ul></div>
+                <div class="style-card"><div class="style-card-name">[ Karasu ]</div>
+                    <div class="style-variant">
+                        <div class="style-variant-title">IF CM (Central Midfielder)</div>
+                        <div class="moveset-block">
+                            <div class="moveset-label">Base Moveset</div>
+                            <ul>
+                                <li>Arm Lock (C) — OFF-BALL — unlimited — MAJOR D MOVE</li>
+                                <li>Arm Lock (C) — OFF-BALL — Запрещено использовать в боксе — MAJOR D MOVE</li>
+                                <li>Crow Theft (V) — OFF-BALL — unlimited — MAJOR D MOVE</li>
+                                <li>Crow Theft (V) — OFF-BALL — Запрещено использовать в боксе — MAJOR D MOVE</li>
+                                <li>Crow Deflect (V) — IN AIR — 2+1 — MAJOR D MOVE</li>
+                                <li>Raven Pass (V) — ON BALL — banned side-to-side, Запрещено из бокса, в бокс.</li>
+                                <li>Blackwing Curve (B) — Запрещено из бокса, в бокс.</li>
+                            </ul>
+                        </div>
+                        <div class="moveset-block">
+                            <div class="moveset-label">Awakening Mode</div>
+                            <ul>
+                                <li>Crow Clearance (C) — IN AIR / OFF-BALL — 1 per AWK</li>
+                                <li>Blackout Cut (V) — OFF-BALL</li>
+                                <li>Extraordinary Striker Pass (B) — ON-BALL</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="style-variant">
+                        <div class="style-variant-title">IF DW (Defensive Winger)</div>
+                        <div class="moveset-block">
+                            <div class="moveset-label">Base Moveset</div>
+                            <ul>
+                                <li>Arm Lock (C) — OFF-BALL — 3+1 — MAJOR D MOVE</li>
+                                <li>Arm Lock (C) — OFF-BALL — Запрещено использовать в боксе — MAJOR D MOVE</li>
+                                <li>Crow Theft (V) — OFF-BALL — 3+1 — MAJOR D MOVE</li>
+                                <li>Crow Theft (V) — OFF-BALL — Запрещено использовать в боксе — MAJOR D MOVE</li>
+                                <li>Crow Deflect (V) — IN AIR — 2+1 — MAJOR D MOVE</li>
+                                <li>Raven Pass (V) — ON BALL — banned side-to-side, Запрещено из бокса, в бокс.</li>
+                                <li>Blackwing Curve (B) — Запрещено из бокса, в бокс.</li>
+                            </ul>
+                        </div>
+                        <div class="moveset-block">
+                            <div class="moveset-label">Awakening Mode</div>
+                            <ul>
+                                <li>Crow Clearance (C) — IN AIR / OFF-BALL</li>
+                                <li>Blackout Cut (V) — OFF-BALL</li>
+                                <li>Extraordinary Striker Pass (B) — ON-BALL</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="style-card"><div class="style-card-name">[ Ness ]</div><ul><li>Mirror Shield (C) — только 2 раза за тайм + 1 в овертайме. Не забрал мяч — не считается.</li><li>Illusion Cross (C) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li>Weapon Disabler (V) — только 4 раза за тайм + 1 в овертайме.</li><li>Magician Mirage (V) — запрещён во вражеском боксе.</li><li>Flexible Spell (V) — во вражеский бокс / из него запрещено. Только с тиммейтом на вашей половине.</li><li>A New Spell (B AWK) — в любой бокс / из любого бокса запрещено. Только с тиммейтом на вашей половине.</li></ul></div>
 
@@ -965,11 +1242,42 @@
 
                 <div class="style-card"><div class="style-card-name">[ Demon Shidou ]</div><ul><li>Demonic Dribble (C) — запрещён в боксе, разрешено залетать.</li><li>Demonic Shot (C) — запрещён во вражеском боксе.</li><li>Demonic Overhead Kick (V) — запрещён во вражеском боксе.</li><li>Demonic Header (B) — запрещён во вражеском боксе.</li><li>Inferno Dragon Drive (C AWK) — только для отбора. Как удар — запрещено.</li></ul></div>
 
+                <div class="style-card"><div class="style-card-name">[ Lavinho ]</div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Base Skills</div>
+                        <ul>
+                            <li>Rising Dance (C) — Запрещено из бокса, в бокс.</li>
+                            <li>Butterfly Dribble (C) — Запрещено из бокса, в бокс.</li>
+                            <li>Ginga Style (V) — Запрещено из бокса, в бокс.</li>
+                            <li>Ginga Shot (V) — Запрещено из бокса, в бокс.</li>
+                            <li>Butterfly Counter (B) — Запрещено из бокса, в бокс.</li>
+                        </ul>
+                    </div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Awakening</div>
+                        <ul>
+                            <li>Rising Dance (C) — banned (autogoal)</li>
+                            <li>Butterfly Intercept (B) — Запрещено использовать в боксе</li>
+                            <li>Tiki Taka (B) — banned side-to-side, Запрещено из бокса, в бокс.</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="style-card"><div class="style-card-name">[ Reo ]</div><ul><li>Запрещено использовать скиллы при потоке с уменьшением Cooldown. Искл.: [ Emperor ].</li><li>Можно копировать одну из: Malicia (C), Force Defense (C), Total Clearance (V), Golden Defense (B) — только 1 раз, если таких стилей нет в команде.</li><li>Запрещено копировать пасы, если в команде есть стиль с пасом и он его использует.</li><li>Запрещено копировать любые защитные скиллы, World Class, Twister Pass (V), Trap (C) / Skull Trap (C) / Skeleton Trap (C), Center of Gravity (C), Off Balance (C).</li><li>Diving Header (V) — можно копировать 3 раза за тайм.</li><li>Правила скопированных способностей распространяются на вас.</li><li>Camouflage/Stealth Step (V) — 3 раза за тайм + 1 в овертайме. На свободный мяч / не забрал — не считается. Запрещено в боксе (можно залетать). Запрещено без мяча на вражеской половине.</li><li>Cross Elastico Nutmeg (V) — можно в боксе / влетать, но запрещено на игроке CM.</li><li>Trivela Shot (V) — запрещён во вражеском боксе.</li><li>Chameleon Defence (B) — 2 раза за тайм. Не считается 1/2, если мяч летел от тиммейта. Запрещено на другой половине и в своём боксе / влетать в него.</li><li>Oppressive Pass (B) / Lob Pass (V) — запрещены.</li><li>Physical Pressure (B) — запрещён.</li><li>Lag Avatar запрещён. При лагах во время Camouflage/Stealth Step (V) — обязаны снять аксессуары. Иначе ТП тайма или переигровка.</li></ul></div>
 
                 <div class="style-card"><div class="style-card-name">[ Aiku ]</div><ul><li>Только на позиции Central Midfielder.</li><li>Total Clearance (V) — запрещено в своём боксе; если ты не в своём боксе, а оппонент в боксе; если ты в своём, а оппонент нет; во время способности удара оппонента; после способности удара оппонента (Free Goal).</li><li>Total Clearance (V) — 3 раза за тайм + 1 в овертайме. Не забрал — считается.</li><li>Snake Interception (V) — 3 раза + 1 в овертайме. Не реализовалась — не считается.</li><li>Намеренный гост мяча через Snake Interception (V) — запрещён (искл.: во время пасов).</li><li>Snake Vision (B) + поток на скорость — запрещено.</li><li>Во время Awakening — 2 отбора.</li></ul></div>
 
-                <div class="style-card updated"><div class="style-card-name">[ Rin ]</div><ul><li>Center of Gravity (C) — запрещено, когда соперник использует способность удара.</li><li>Center of Gravity (C) — 2 раза за тайм + 1 в овертайме.</li><li>Curve Shot (C) — запрещён во вражеском боксе.</li><li>Predator Break (B) — запрещён в боксе / залетать во вражеский бокс.</li><li class="new-item">Запрещено использовать прыжок + C возле бокса.</li></ul></div>
+                <div class="style-card"><div class="style-card-name">[ NEL Aiku ]</div>
+                    <ul>
+                        <li>Serpentine Radar (B) — METAVISION — запрещено использовать вместе с потоками на прибавку к скорости.</li>
+                        <li>Snake Intercept (V) — NEL MAJOR D-MOVE — запрещено использовать (вы должны использовать обычный TC и AIR TC).</li>
+                        <li>Snake Deflect (C) — MAJOR D-MOVE — запрещено использовать (вы должны играть с обычным FD).</li>
+                        <li>TCS — 3+1 OT</li>
+                        <li>AIR TCS — 2+1 OT</li>
+                    </ul>
+                </div>
+
+                <div class="style-card"><div class="style-card-name">[ Rin ]</div><ul><li>Center of Gravity (C) — запрещено, когда соперник использует способность удара.</li><li>Center of Gravity (C) — 2 раза за тайм + 1 в овертайме.</li><li>Curve Shot (C) — запрещён во вражеском боксе.</li><li>Predator Break (B) — запрещён в боксе / залетать во вражеский бокс.</li><li>Запрещено использовать прыжок + C возле бокса.</li></ul></div>
 
                 <div class="style-card"><div class="style-card-name">[ NEL Rin ]</div><ul><li>Center of Gravity (C) — запрещено, когда соперник использует способность удара.</li><li>Center of Gravity (C) — 2 раза за тайм + 1 в овертайме.</li><li>Annihilation (C) — запрещён во вражеском боксе.</li></ul></div>
 
@@ -993,60 +1301,283 @@
 
                 <div class="style-card"><div class="style-card-name">[ Elf Emperor ]</div><ul><li>Elf Impact (C) + Volley — запрещено.</li><li>Elf Impact (C) — запрещён во вражеском боксе.</li><li>Elf Impact (C) + [ Destructive Impulses ] — запрещено + нельзя бить во вражеском боксе.</li><li>Elf Emperor Volley (V) — запрещён на противоположной половине.</li><li>Helper Dribble (V) — использовать в боксе, спавнить за боксом и влетать — запрещено. Баг с телепортом мяча — запрещён.</li></ul></div>
 
-                <div class="style-card updated"><div class="style-card-name">[ Don Lorenzo ]</div><ul><li>Только на позиции Central Midfielder.</li><li>Zombie Steal (V) — запрещён в своём мини-боксе.</li><li class="new-item">Undead Walk — 1 раз за тайм.</li><li class="new-item">Zombie Steal — 1 раз за тайм.</li><li class="new-item">Golden Defense — 1+1 (1 в основное время + 1 в овертайме).</li><li class="new-item">Не сочетается с [ Aiku ]. Считается за World Class. На DW допускается.</li></ul></div>
+                <div class="style-card"><div class="style-card-name">[ Zantetsu ]</div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Base Moveset</div>
+                        <ul>
+                            <li>Maglev: Motor Car (C) — AUTOTRACK PASS — запрещено side-to-side. Также запрещено давать пасс инбокс/из бокса.</li>
+                            <li>Territory Shot (V) — STRAIGHT SHOT — разрешено использовать в боксе.</li>
+                            <li>Left-Footed Curve (V) — CURVE SHOT — запрещено использовать в боксе.</li>
+                        </ul>
+                    </div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Awakening Mode</div>
+                        <ul>
+                            <li>Local Express Bullet Train (B) — ON-BALL — запрещено использовать в боксе.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="style-card"><div class="style-card-name">[ Sendou ]</div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Base Moveset</div>
+                        <ul>
+                            <li>Ace Shot (C) — STRAIGHT ARC SHOT — запрещено использовать в боксе.</li>
+                            <li>Line Clearance (V) — MAJOR D-MOVE — разрешено использовать 3+1.</li>
+                            <li>Decoy Striker (V) — AUTOTRACK PASS — запрещено side-to-side. Также запрещено давать пасс инбокс/из бокса.</li>
+                            <li class="upd">Запрещено прыжок + C.</li>
+                        </ul>
+                    </div>
+                    <div class="moveset-block">
+                        <div class="moveset-label">Awakening Mode</div>
+                        <ul>
+                            <li>Star Clear (V) — MAJOR AIR D-MOVE</li>
+                            <li>Star Strike (B) — STRAIGHT SHOT — запрещено использовать в вражеском боксе.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="style-card"><div class="style-card-name">[ Don Lorenzo ]</div><ul><li>Только на позиции Central Midfielder.</li><li>Zombie Steal (V) — запрещён в своём мини-боксе.</li><li>Undead Walk — 1 раз за тайм.</li><li>Zombie Steal — 1 раз за тайм.</li><li>Golden Defense — 1+1 (1 в основное время + 1 в овертайме).</li><li>Не сочетается с [ Aiku ]. Считается за World Class. На DW допускается.</li></ul></div>
 
                 <div class="style-card"><div class="style-card-name">[ Subzero Loki ]</div><ul><li>Запрещён с потоками на скорость. Искл.: [ Emperor ].</li><li>Только на позиции Central Midfielder.</li><li>Godspeed Freeze (V) — 4 раза за тайм + 1 в овертайме.</li><li>Если в команде есть [ Subzero Loki ]: [ Reo ] — только 3+0 Camouflage; [ Nagi ] / [ NEL Nagi ] / [ Skeleton Nagi ] / [ Easter Yukimiya ] — только 1+0 Defensive Trap.</li><li>Godspeed Freeze (V) — запрещено для глобал кд на Trap. Запрещено делать мяч IFrame при атаке [ Chigiri ] под Speedster (C) / [ NEL Chigiri ] под High-Speed Speedster (C) — считается как ФГ.</li><li>Frost Counter (B) — запрещён.</li></ul></div>
+
+                <div class="style-card upd-card"><div class="style-card-name">[ Snuffy ]</div>
+                    <ul>
+                        <li class="upd">Считается за World Class.</li>
+                    </ul>
+                </div>
 
                 <div class="style-card"><div class="style-card-name">[ Santa Lavinho ]</div><ul><li>Shot после Wrapped Dribble (C) — запрещён во вражеском боксе.</li><li>Christmas Stampede (V) и Sleigh Ride (B) — для дриблинга на чужой половине разрешены.</li></ul></div>
             </div>
         </section>
 
         <footer class="footer">
-            <p><strong>Mirage League</strong> · Официальный регламент · Документ сгенерирован автоматически</p>
+            <p><strong>Mirage League</strong> · Официальный регламент · Rules Update v3</p>
         </footer>
     </main>
 
     <script>
+        /* ============ STORAGE ============ */
+        const LS = {
+            get(k, d) { try { const v = localStorage.getItem('ml_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+            set(k, v) { try { localStorage.setItem('ml_' + k, JSON.stringify(v)); } catch (e) {} }
+        };
+
+        const DEFAULT_KEYS = {
+            staff: 'L45923939FDANJTKGVS',
+            head:  'H7741028MRKQZXPLWBD',
+            maker: 'R3385614TQWNVCJHFES'
+        };
+        const RANKS = {
+            staff: { name: 'Выш состав',    cls: 'rank-staff', perms: ['add', 'del', 'keys'] },
+            head:  { name: 'Headrulemaker', cls: 'rank-head',  perms: ['add', 'del'] },
+            maker: { name: 'Rulemaker',     cls: 'rank-maker', perms: ['add'] }
+        };
+
+        let KEYS = LS.get('keys', null) || DEFAULT_KEYS;
+        let SESSION = LS.get('session', null);
+        let RULES = LS.get('rules', []);
+
+        const can = p => SESSION && RANKS[SESSION.rank] && RANKS[SESSION.rank].perms.includes(p);
+
+        /* ============ TOAST ============ */
+        const toastEl = document.getElementById('toast');
+        let toastTimer;
+        function toast(msg) {
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2600);
+        }
+
+        /* ============ MODALS ============ */
+        function openModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+        document.querySelectorAll('.modal-close').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
+        document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); }));
+
+        /* ============ ADMIN UI ============ */
+        const adminBtn = document.getElementById('adminBtn');
+        const adminMenu = document.getElementById('adminMenu');
+        const menuNick = document.getElementById('menuNick');
+        const menuRank = document.getElementById('menuRank');
+        const menuKeys = document.getElementById('menuKeys');
+
+        function updateAdminUI() {
+            if (SESSION) {
+                adminBtn.innerHTML = '<span class="adm-avatar">' + SESSION.nick.charAt(0).toUpperCase() + '</span>' + SESSION.nick;
+                menuNick.textContent = SESSION.nick;
+                menuRank.textContent = RANKS[SESSION.rank].name;
+                menuRank.className = 'rank-badge ' + RANKS[SESSION.rank].cls;
+                menuKeys.style.display = can('keys') ? 'block' : 'none';
+            } else {
+                adminBtn.innerHTML = '🔐 ВХОД';
+                adminMenu.classList.remove('show');
+            }
+            injectAddButtons();
+            renderCustomRules();
+        }
+
+        adminBtn.addEventListener('click', () => {
+            if (!SESSION) openModal('authModal');
+            else adminMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.admin-zone')) adminMenu.classList.remove('show');
+        });
+
+        document.getElementById('menuLogout').addEventListener('click', () => {
+            SESSION = null; LS.set('session', null);
+            updateAdminUI(); toast('Вы вышли из системы');
+        });
+
+        /* ============ AUTH ============ */
+        document.getElementById('authSubmit').addEventListener('click', () => {
+            const nick = document.getElementById('authNick').value.trim();
+            const key = document.getElementById('authKey').value.trim();
+            if (!nick) return toast('Введите ник');
+            if (!key) return toast('Введите ключ');
+            const rank = Object.keys(KEYS).find(r => KEYS[r] === key);
+            if (!rank) return toast('Неверный ключ доступа');
+            SESSION = { nick, rank };
+            LS.set('session', SESSION);
+            closeModal('authModal');
+            document.getElementById('authKey').value = '';
+            updateAdminUI();
+            toast('Добро пожаловать, ' + nick + ' · ' + RANKS[rank].name);
+        });
+
+        /* ============ KEYS (staff only) ============ */
+        menuKeys.addEventListener('click', () => {
+            if (!can('keys')) return toast('Недостаточно прав');
+            document.getElementById('keyStaff').value = KEYS.staff;
+            document.getElementById('keyHead').value = KEYS.head;
+            document.getElementById('keyMaker').value = KEYS.maker;
+            adminMenu.classList.remove('show');
+            openModal('keysModal');
+        });
+        document.getElementById('keysSubmit').addEventListener('click', () => {
+            const s = document.getElementById('keyStaff').value.trim();
+            const h = document.getElementById('keyHead').value.trim();
+            const m = document.getElementById('keyMaker').value.trim();
+            if (!s || !h || !m) return toast('Ключи не могут быть пустыми');
+            KEYS = { staff: s, head: h, maker: m };
+            LS.set('keys', KEYS);
+            closeModal('keysModal');
+            toast('Ключи обновлены');
+        });
+
+        /* ============ ADD RULE ============ */
+        let addTarget = null;
+        function injectAddButtons() {
+            document.querySelectorAll('.section').forEach(sec => {
+                const existing = sec.querySelector('.add-rule-btn');
+                if (can('add')) {
+                    if (!existing) {
+                        const b = document.createElement('button');
+                        b.className = 'add-rule-btn';
+                        b.textContent = '+ ДОБАВИТЬ';
+                        b.addEventListener('click', () => {
+                            addTarget = sec.id;
+                            document.getElementById('addModalSub').textContent = 'Раздел: ' + sec.querySelector('.section-title').textContent;
+                            document.getElementById('addText').value = '';
+                            openModal('addModal');
+                        });
+                        sec.querySelector('.section-header').appendChild(b);
+                    }
+                } else if (existing) existing.remove();
+            });
+        }
+
+        document.getElementById('addSubmit').addEventListener('click', () => {
+            const text = document.getElementById('addText').value.trim();
+            if (!addTarget) return;
+            if (!text) return toast('Введите текст правила');
+            /* UPD-система: со старых снимается, на новые ставится */
+            RULES.forEach(r => r.upd = false);
+            RULES.push({ id: Date.now(), section: addTarget, text, nick: SESSION.nick, upd: true });
+            LS.set('rules', RULES);
+            stripUpdDom();
+            renderCustomRules();
+            closeModal('addModal');
+            toast('Правило добавлено · UPD обновлён');
+        });
+
+        function stripUpdDom() {
+            document.querySelectorAll('.upd, .upd-chip, .upd-card').forEach(el => {
+                el.classList.remove('upd', 'upd-chip', 'upd-card');
+            });
+        }
+
+        /* ============ RENDER CUSTOM RULES ============ */
+        function renderCustomRules() {
+            document.querySelectorAll('.custom-rules').forEach(e => e.remove());
+            const bySection = {};
+            RULES.forEach(r => { (bySection[r.section] = bySection[r.section] || []).push(r); });
+            Object.keys(bySection).forEach(sid => {
+                const sec = document.getElementById(sid);
+                if (!sec) return;
+                const ul = document.createElement('ul');
+                ul.className = 'rules-list custom-rules';
+                bySection[sid].forEach(r => {
+                    const li = document.createElement('li');
+                    if (r.upd) li.classList.add('upd');
+                    li.appendChild(document.createTextNode(r.text));
+                    const a = document.createElement('span');
+                    a.className = 'author';
+                    a.dataset.nick = r.nick;
+                    a.textContent = r.nick.charAt(0).toUpperCase();
+                    li.appendChild(a);
+                    if (can('del')) {
+                        const d = document.createElement('button');
+                        d.className = 'del-btn';
+                        d.textContent = '✕';
+                        d.title = 'Удалить правило';
+                        d.addEventListener('click', () => {
+                            RULES = RULES.filter(x => x.id !== r.id);
+                            LS.set('rules', RULES);
+                            renderCustomRules();
+                            toast('Правило удалено');
+                        });
+                        li.appendChild(d);
+                    }
+                    ul.appendChild(li);
+                });
+                sec.querySelector('.section-body').appendChild(ul);
+            });
+        }
+
+        /* ============ NAV / SCROLL ============ */
         const navToggle = document.getElementById('navToggle');
         const navSidebar = document.getElementById('navSidebar');
         const navOverlay = document.getElementById('navOverlay');
-
-        navToggle.addEventListener('click', () => {
-            navSidebar.classList.toggle('open');
-            navOverlay.classList.toggle('show');
-        });
-        navOverlay.addEventListener('click', () => {
-            navSidebar.classList.remove('open');
-            navOverlay.classList.remove('show');
-        });
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navSidebar.classList.remove('open');
-                navOverlay.classList.remove('show');
-            });
-        });
+        navToggle.addEventListener('click', () => { navSidebar.classList.toggle('open'); navOverlay.classList.toggle('show'); });
+        navOverlay.addEventListener('click', () => { navSidebar.classList.remove('open'); navOverlay.classList.remove('show'); });
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => { navSidebar.classList.remove('open'); navOverlay.classList.remove('show'); }));
 
         const sections = document.querySelectorAll('.section');
         const navLinks = document.querySelectorAll('.nav-link');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + id));
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(en => {
+                if (en.isIntersecting) {
+                    const id = en.target.getAttribute('id');
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + id));
                 }
             });
         }, { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 });
         sections.forEach(s => observer.observe(s));
 
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('visible'); });
         }, { threshold: 0.05 });
         sections.forEach(s => revealObserver.observe(s));
 
         const scrollTop = document.getElementById('scrollTop');
         window.addEventListener('scroll', () => scrollTop.classList.toggle('visible', window.scrollY > 500));
         scrollTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        /* ============ INIT ============ */
+        updateAdminUI();
     </script>
 </body>
 </html>
